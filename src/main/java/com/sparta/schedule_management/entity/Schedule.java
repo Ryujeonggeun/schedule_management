@@ -25,4 +25,10 @@ public class Schedule extends Timestamped {
         this.manager = scheduleRequestDto.getManager();
         this.password = scheduleRequestDto.getPassword();
     }
+
+    public void update(ScheduleRequestDto scheduleRequestDto) {
+        this.title = scheduleRequestDto.getTitle();
+        this.todo = scheduleRequestDto.getTodo();
+        this.manager = scheduleRequestDto.getManager();
+    }
 }
