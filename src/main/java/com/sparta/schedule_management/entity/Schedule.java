@@ -11,19 +11,18 @@ import java.util.Date;
 @Getter
 @Setter
 @NoArgsConstructor
-public class Schedule {
+public class Schedule extends Timestamped {
     private Long id;
     private String title;
     private String todo;
     private String manager;
     private String password;
-    private Date Date;
+
 
     public Schedule(ScheduleRequestDto scheduleRequestDto) {
         this.title = scheduleRequestDto.getTitle();
         this.todo = scheduleRequestDto.getTodo();
         this.manager = scheduleRequestDto.getManager();
         this.password = scheduleRequestDto.getPassword();
-        this.Date = scheduleRequestDto.getDate();
     }
 }
