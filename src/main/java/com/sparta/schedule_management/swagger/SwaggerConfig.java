@@ -31,5 +31,7 @@ public class SwaggerConfig {
                 .title("API Test") // API의 제목
                 .description("Let's practice Swagger UI") // API에 대한 설명
                 .version("1.0.0"); // API의 버전
+
+        //사용 URL: http://localhost:8080/swagger-ui.html
     }
 }
