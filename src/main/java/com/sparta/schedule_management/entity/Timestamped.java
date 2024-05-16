@@ -5,6 +5,7 @@ import lombok.Getter;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Getter
@@ -14,7 +15,7 @@ public abstract class Timestamped {
     @CreatedDate
     @Column(updatable = true)
     @Temporal(TemporalType.DATE)
-    private LocalDateTime Date;
+    private LocalDate date;
 
 
 }
