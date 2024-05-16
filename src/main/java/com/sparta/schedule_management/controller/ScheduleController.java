@@ -8,6 +8,7 @@ import org.apache.coyote.BadRequestException;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.*;
 
 @RestController
@@ -31,16 +32,21 @@ public class ScheduleController {
         return scheduleService.getSchedules();
     }
 
+    @GetMapping("/search")
+    private List<ScheduleResponseDto> getSchedulesByDate(@RequestParam LocalDate date) {
+        return scheduleService.getDateSchedules(date);
+    }
 
-    @PutMapping("/{id}/{password}")
-    public Long updateSchedule(@PathVariable Long id, @PathVariable String password, @RequestBody ScheduleRequestDto scheduleRequestDto) {
-        return scheduleService.updateSchedule(id,password,scheduleRequestDto);
+
+    @PutMapping("/{id}")
+    public Long updateSchedule(@PathVariable Long id, @RequestBody ScheduleRequestDto scheduleRequestDto) {
+        return scheduleService.updateSchedule(id, scheduleRequestDto);
 
     }
 
-    @DeleteMapping("/{id}/{password}")
-    public Long deleteSchedule(@PathVariable Long id, @PathVariable String password) {
-    return scheduleService.deleteSchedule(id,password);
+    @DeleteMapping("/{id}")
+    public Long deleteSchedule(@PathVariable Long id, @RequestBody ScheduleRequestDto scheduleRequestDto ) {
+        return scheduleService.deleteSchedule(id, scheduleRequestDto);
 
     }
 

@@ -13,9 +13,9 @@ import java.time.LocalDateTime;
 @EntityListeners(AuditingEntityListener.class)
 public abstract class Timestamped {
     @CreatedDate
-    @Column(updatable = true)
+    @Column(updatable = false)
     @Temporal(TemporalType.DATE)
-    private LocalDate date;
+    private LocalDate createdAt;
 
 
 }

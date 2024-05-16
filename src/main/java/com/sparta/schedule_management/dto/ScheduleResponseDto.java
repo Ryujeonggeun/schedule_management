@@ -11,16 +11,18 @@ import java.util.Date;
 @Getter
 public class ScheduleResponseDto {
     private Long id;
+    private LocalDate date;
     private String title;
     private String todo;
     private String manager;
-    private LocalDate date;
+    private LocalDate createdAt;
 
     public ScheduleResponseDto(Schedule schedule) {
         this.id = schedule.getId();
+        this.date = schedule.getDate();
         this.title = schedule.getTitle();
         this.todo = schedule.getTodo();
         this.manager = schedule.getManager();
-        this.date = schedule.getDate();
+        this.createdAt = schedule.getCreatedAt();
     }
 }
