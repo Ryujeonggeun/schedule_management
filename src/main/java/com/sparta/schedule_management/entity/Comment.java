@@ -1,5 +1,6 @@
 package com.sparta.schedule_management.entity;
 
+import com.sparta.schedule_management.dto.ScheduleRequestDto;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,6 +12,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @Table(name = "comment")
+@NoArgsConstructor
 public class Comment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -18,6 +20,7 @@ public class Comment {
     private String userName;
     private String content;
     private LocalDateTime createdAt;
+    private Long scheduleId;
     // 일정아이디??
 
 
@@ -25,5 +28,10 @@ public class Comment {
     @ManyToOne
     @JoinColumn(name = "schedule_id")
     private Schedule schedule;
+
+    //스케줄 아이디 받아오기
+    public Comment( Schedule schedule) {
+        this.scheduleId = schedule.getId();
+        }
 }
 
