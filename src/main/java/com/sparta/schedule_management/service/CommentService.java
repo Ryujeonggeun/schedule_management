@@ -1,11 +1,13 @@
 package com.sparta.schedule_management.service;
 
+import com.sparta.schedule_management.dto.CommentDeleteRequestDto;
 import com.sparta.schedule_management.dto.CommentRequestDto;
 import com.sparta.schedule_management.dto.CommentResponseDto;
 import com.sparta.schedule_management.entity.Comment;
 import com.sparta.schedule_management.entity.Schedule;
 import com.sparta.schedule_management.repository.CommentRepository;
 import com.sparta.schedule_management.repository.ScheduleRepository;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -47,13 +49,29 @@ public class CommentService {
         //입력받은 이름이 동일한지 확인
         if (!comment.getUserName().equals(requestDto.getUserName())) {
            throw  new IllegalArgumentException("선택한 이름으로 작성한 댓글이 없습니다.");
-        }else
+        }
         comment.setContent(requestDto.getContent());
         commentRepository.save(comment);
         return new CommentResponseDto(comment);
     }
 
 
+
+
+
+    public  ResponseEntity<String> delete(Long id, CommentDeleteRequestDto requestDto) {
+        //선택한 일정이 Comment 일정에 존재하는지 확인
+        Comment comment = findComment(id);
+
+        //입력받은 이름이 동일한지 확인후 동일하면 삭제
+        if (comment.getUserName().equals(requestDto.getUserName())) {
+            commentRepository.delete(comment);
+            return ResponseEntity.ok("댓글이 삭제되었습니다.");
+        }else {
+            throw  new IllegalArgumentException("선택한 이름으로 작성한 댓글이 없습니다.");
+        }
+
+    }
 
     private Comment findComment(Long id) {
         return commentRepository.findById(id).orElseThrow(()

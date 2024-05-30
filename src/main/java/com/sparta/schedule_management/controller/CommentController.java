@@ -1,10 +1,12 @@
 package com.sparta.schedule_management.controller;
 
+import com.sparta.schedule_management.dto.CommentDeleteRequestDto;
 import com.sparta.schedule_management.dto.CommentRequestDto;
 import com.sparta.schedule_management.dto.CommentResponseDto;
 import com.sparta.schedule_management.service.CommentService;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
@@ -47,5 +49,18 @@ public class CommentController {
             }
         }
         return commentService.updateComment(id, commentRequestDto);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deleteComment(@PathVariable Long id , @RequestBody @Valid CommentDeleteRequestDto requestDto, BindingResult bindingResult) {
+        // Validation 예외처리
+        List<FieldError> fieldErrors = bindingResult.getFieldErrors();
+        if (fieldErrors.size() > 0) {
+            for (FieldError fieldError : bindingResult.getFieldErrors()) {
+                log.error(fieldError.getField() + " 필드 : " + fieldError.getDefaultMessage());
+
+            }
+        }
+        return commentService.delete(id,requestDto);
     }
 }
