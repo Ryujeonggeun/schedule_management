@@ -20,4 +20,5 @@ public class CommentResponseDto {
         this.createdAt = comment.getCreatedAt();
         this.scheduleId = comment.getSchedule().getId();
     }
+
 }

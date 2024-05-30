@@ -1,5 +1,6 @@
 package com.sparta.schedule_management.entity;
 
+import com.sparta.schedule_management.dto.CommentRequestDto;
 import com.sparta.schedule_management.dto.ScheduleRequestDto;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -28,13 +29,13 @@ public class Comment {
     @JoinColumn(name = "schedule_id")
     private Schedule schedule;
 
-    //스케줄 아이디 받아오기
     public Comment(String userName, String content)  {
         this.userName = userName;
         this.content = content;
         this.createdAt = LocalDateTime.now();
 
     }
+
 
 }
 

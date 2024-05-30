@@ -20,7 +20,7 @@ public class CommentService {
 
     public CommentResponseDto createComment(CommentRequestDto requestDto) {
 
-        //선택한 일정이 DB에 존재하는지 확인
+        //선택한 일정이 스케줄 DB에 존재하는지 확인
         Schedule schedule = scheduleRepository.findById(requestDto.getRequestScheduleId()).orElseThrow(()
                 -> new IllegalArgumentException("선택한 일정은 존재하지 않습니다.")
                 );
@@ -34,5 +34,29 @@ public class CommentService {
 
             return new CommentResponseDto(savedComment);
 
+    }
+
+    public CommentResponseDto updateComment(Long id, CommentRequestDto requestDto) {
+        //선택한 일정이 스케줄 DB에 존재하는지 확인
+        Schedule schedule = scheduleRepository.findById(requestDto.getRequestScheduleId()).orElseThrow(()
+                -> new IllegalArgumentException("선택한 일정은 존재하지 않습니다.")
+        );
+
+        //선택한 일정이 Comment 일정에 존재하는지 확인
+        Comment comment = findComment(id);
+        //입력받은 이름이 동일한지 확인
+        if (!comment.getUserName().equals(requestDto.getUserName())) {
+           throw  new IllegalArgumentException("선택한 이름으로 작성한 댓글이 없습니다.");
+        }else
+        comment.setContent(requestDto.getContent());
+        commentRepository.save(comment);
+        return new CommentResponseDto(comment);
+    }
+
+
+
+    private Comment findComment(Long id) {
+        return commentRepository.findById(id).orElseThrow(()
+                -> new IllegalArgumentException("선택한 일정은 존재하지 않습니다."));
     }
 }
