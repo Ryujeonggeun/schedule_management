@@ -20,7 +20,6 @@ public class Comment {
     private String userName;
     private String content;
     private LocalDateTime createdAt;
-    private Long scheduleId;
     // 일정아이디??
 
 
@@ -30,8 +29,12 @@ public class Comment {
     private Schedule schedule;
 
     //스케줄 아이디 받아오기
-    public Comment( Schedule schedule) {
-        this.scheduleId = schedule.getId();
-        }
+    public Comment(String userName, String content)  {
+        this.userName = userName;
+        this.content = content;
+        this.createdAt = LocalDateTime.now();
+
+    }
+
 }
 
