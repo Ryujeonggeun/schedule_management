@@ -23,7 +23,7 @@ public class UserController {
 
     private UserService userService;
 
-    public  UserController(UserService userService) {
+    public UserController(UserService userService) {
         this.userService = userService;
     }
 
@@ -32,24 +32,23 @@ public class UserController {
 
         // Validation 예외처리
         List<FieldError> fieldErrors = bindingResult.getFieldErrors();
-        if(fieldErrors.size() > 0) {
+        if (fieldErrors.size() > 0) {
             for (FieldError fieldError : bindingResult.getFieldErrors()) {
                 log.error(fieldError.getField() + " 필드 : " + fieldError.getDefaultMessage());
             }
         }
         return userService.singup(requestDto);
     }
-
-    @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestBody @Valid LoginRequestDto requestDto, HttpServletResponse res, BindingResult bindingResult) {
-
-        // Validation 예외처리
-        if (bindingResult.hasErrors()) {
-            List<FieldError> fieldErrors = bindingResult.getFieldErrors();
-            for (FieldError fieldError : fieldErrors) {
-                log.error(fieldError.getField() + " 필드 : " + fieldError.getDefaultMessage());
-            }
-        }
-        return userService.login(requestDto, res);
-    }
 }
+//    @PostMapping("/login")
+//    public ResponseEntity<String> login(@RequestBody @Valid LoginRequestDto requestDto, HttpServletResponse res, BindingResult bindingResult) {
+//
+//        // Validation 예외처리
+//        if (bindingResult.hasErrors()) {
+//            List<FieldError> fieldErrors = bindingResult.getFieldErrors();
+//            for (FieldError fieldError : fieldErrors) {
+//                log.error(fieldError.getField() + " 필드 : " + fieldError.getDefaultMessage());
+//            }
+//        }
+//        return userService.login(requestDto, res);
+

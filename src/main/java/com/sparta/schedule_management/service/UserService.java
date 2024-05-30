@@ -69,13 +69,9 @@ public class UserService {
         }
 
         //토큰 생성
-        String token = jwtUtil.generateToken(username);
+        String token = jwtUtil.createToken(username, user.getRole());
 
-        jwtUtil.addJwtToCookie(res, token);
-
-        //토큰 검증
-        jwtUtil.getUsernameFromToken(token);
-        jwtUtil.validateToken(token);
+        jwtUtil.addJwtToCookie(token, res);
 
 
         // 로그인 성공 시 반환할 메시지와 상태코드를 설정하여 반환
