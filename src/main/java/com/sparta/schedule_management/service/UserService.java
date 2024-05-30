@@ -71,6 +71,10 @@ public class UserService {
         //토큰 생성
         String token = jwtUtil.generateToken(username);
 
+        //토큰 검증
+        jwtUtil.validateToken(token);
+        jwtUtil.getUsernameFromToken(token);
+
         jwtUtil.addJwtToCookie(res, token);
 
 
