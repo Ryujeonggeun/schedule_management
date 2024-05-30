@@ -73,6 +73,10 @@ public class UserService {
 
         jwtUtil.addJwtToCookie(res, token);
 
+        //토큰 검증
+        jwtUtil.getUsernameFromToken(token);
+        jwtUtil.validateToken(token);
+
 
         // 로그인 성공 시 반환할 메시지와 상태코드를 설정하여 반환
         return ResponseEntity.ok("로그인에 성공했습니다.");
