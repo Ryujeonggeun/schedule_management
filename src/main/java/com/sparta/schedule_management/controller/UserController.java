@@ -1,11 +1,11 @@
 package com.sparta.schedule_management.controller;
 
-import com.sparta.schedule_management.dto.SingUpRequestDto;
+import com.sparta.schedule_management.dto.LoginRequestDto;
+import com.sparta.schedule_management.dto.SignUpRequestDto;
 import com.sparta.schedule_management.service.UserService;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
@@ -28,7 +28,7 @@ public class UserController {
     }
 
     @PostMapping("/signup")
-    public ResponseEntity<String> singup(@RequestBody @Valid SingUpRequestDto requestDto, BindingResult bindingResult) {
+    public ResponseEntity<String> singup(@RequestBody @Valid SignUpRequestDto requestDto, BindingResult bindingResult) {
 
         // Validation 예외처리
         List<FieldError> fieldErrors = bindingResult.getFieldErrors();
@@ -38,5 +38,18 @@ public class UserController {
             }
         }
         return userService.singup(requestDto);
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<String> login(@RequestBody @Valid LoginRequestDto requestDto, HttpServletResponse res, BindingResult bindingResult) {
+
+        // Validation 예외처리
+        if (bindingResult.hasErrors()) {
+            List<FieldError> fieldErrors = bindingResult.getFieldErrors();
+            for (FieldError fieldError : fieldErrors) {
+                log.error(fieldError.getField() + " 필드 : " + fieldError.getDefaultMessage());
+            }
+        }
+        return userService.login(requestDto, res);
     }
 }

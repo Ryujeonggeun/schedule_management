@@ -50,7 +50,7 @@ public class CommentController {
         }
         return commentService.updateComment(id, commentRequestDto);
     }
-
+    //댓글 삭제
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteComment(@PathVariable Long id , @RequestBody @Valid CommentDeleteRequestDto requestDto, BindingResult bindingResult) {
         // Validation 예외처리

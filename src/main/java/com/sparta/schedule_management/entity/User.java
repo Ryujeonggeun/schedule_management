@@ -1,6 +1,6 @@
 package com.sparta.schedule_management.entity;
 
-import com.sparta.schedule_management.dto.SingUpRequestDto;
+import com.sparta.schedule_management.dto.SignUpRequestDto;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -33,7 +33,7 @@ public class User {
     private UserRoleEnum role;
     private LocalDate createdAt;
 
-    public User(SingUpRequestDto requestDto) {
+    public User(SignUpRequestDto requestDto) {
         this.userId = requestDto.getUserId();
         this.username = requestDto.getUsername();
         this.password = requestDto.getPassword();

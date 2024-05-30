@@ -1,7 +1,6 @@
 package com.sparta.schedule_management.dto;
 
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
@@ -9,7 +8,7 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
-public class SingUpRequestDto {
+public class SignUpRequestDto {
     //사용자 아이디
     @NotBlank
     private String userId;
