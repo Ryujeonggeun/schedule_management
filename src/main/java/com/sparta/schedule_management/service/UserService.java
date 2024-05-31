@@ -10,6 +10,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -17,6 +18,8 @@ public class UserService {
 
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
 
     @Autowired
@@ -38,7 +41,12 @@ public class UserService {
             throw new IllegalArgumentException("유효하지 않은 역할입니다.");
         }
 
+        //비밀번호 암호화
         User user = new User(requestDto);
+        String encodedPassword = passwordEncoder.encode(requestDto.getPassword());
+        user.setPassword(encodedPassword);
+        user.setUsername(requestDto.getUsername());
+
         userRepository.save(user);
         return ResponseEntity.status(HttpStatus.CREATED).body("회원 가입에 성공하였습니다,");
         
@@ -69,11 +77,8 @@ public class UserService {
         }
 
         //토큰 생성
-        String token = jwtUtil.generateToken(username);
+        String token = jwtUtil.generateToken(username,user.getRole());
 
-        //토큰 검증
-        jwtUtil.validateToken(token);
-        jwtUtil.getUsernameFromToken(token);
 
         jwtUtil.addJwtToCookie(res, token);
 
