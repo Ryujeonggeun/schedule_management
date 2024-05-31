@@ -28,7 +28,7 @@ public class UserService {
     }
 
 
-    public ResponseEntity<String> singup(SignUpRequestDto requestDto) {
+    public ResponseEntity<String> ㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴsingup(SignUpRequestDto requestDto) {
 
         // userName 중복 확인
         if (userRepository.findByUsername(requestDto.getUsername()).isPresent()) {
