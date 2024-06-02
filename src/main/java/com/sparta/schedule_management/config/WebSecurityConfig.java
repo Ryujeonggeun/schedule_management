@@ -18,6 +18,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+
 @Configuration
 @EnableWebSecurity // Spring Security 지원을 가능하게 함
 @EnableGlobalMethodSecurity(securedEnabled = true)
@@ -60,28 +61,23 @@ public class WebSecurityConfig {
                 sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
         );
 
-        http.authorizeHttpRequests((authorizeHttpRequests) ->
-                authorizeHttpRequests
+        http.authorizeRequests((authorizeRequests) ->
+                authorizeRequests
                         .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll() // resources 접근 허용 설정
-                        .requestMatchers("/api/user/**").permitAll() // '/api/user/'로 시작하는 요청 모두 접근 허가
+                        .("/api/user/login").permitAll() // 로그인 페이지 접근 허용
+                        .antMatchers("/api/user/**").authenticated() // '/api/user/'로 시작하는 요청은 인증이 필요함
                         .anyRequest().authenticated() // 그 외 모든 요청 인증처리
         );
 
-        http.formLogin((formLogin) ->
-                formLogin
-                        .loginPage("/api/user/login-page").permitAll()
-        );
+//        http.formLogin((formLogin) ->
+//                formLogin
+//                        .loginPage("/api/user/login-page").permitAll()
+//        );
 
         // 필터 관리
         http.addFilterBefore(jwtAuthorizationFilter(), JwtAuthenticationFilter.class);
         http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
 
-        // 접근 불가 페이지
-        http.exceptionHandling((exceptionHandling) ->
-                exceptionHandling
-                        // "접근 불가" 페이지 URL 설정
-                        .accessDeniedPage("/forbidden.html")
-        );
 
         return http.build();
     }

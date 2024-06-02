@@ -31,7 +31,7 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest req, HttpServletResponse res, FilterChain filterChain) throws ServletException, IOException {
-
+        log.info("doFilterInternal 실행");
         String tokenValue = jwtUtil.getTokenFromRequest(req);
 
         //hasText : Null체크

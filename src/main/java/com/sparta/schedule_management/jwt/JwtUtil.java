@@ -1,9 +1,7 @@
 package com.sparta.schedule_management.jwt;
 
 import com.sparta.schedule_management.entity.UserRoleEnum;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
 import jakarta.servlet.http.Cookie;
@@ -58,13 +56,12 @@ public class JwtUtil {
     }
 
 
-    // Access Token 만료시간 설정 (60분)
-    private final long ACCESS_TOKEN_EXPIRATION = 60 * 60 * 1000L;
 
-    // JWT 토큰 생성
-    public String generateToken(String username, UserRoleEnum role) {
+    // JWT Access 토큰 , Refresh 토큰 생성
+
+    public String generateToken(String username, UserRoleEnum role, Long expires) {
         Date now = new Date();
-        Date expiryDate = new Date(now.getTime() + ACCESS_TOKEN_EXPIRATION);
+        Date expiryDate = new Date(now.getTime() + expires);
 
         return BEARER_PREFIX + Jwts.builder()
                 .setSubject(username)
@@ -106,16 +103,23 @@ public class JwtUtil {
         return claims.getSubject();
     }
 
-    // JWT 토큰 유효성 검사
+    // 토큰 검증
     public boolean validateToken(String token) {
         try {
-            Jwts.parser().setSigningKey(secret).parseClaimsJws(token);
+            // 토큰에 위변조가 있는지, 만료되지는 않았는지 검증
+            Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
             return true;
-        } catch (Exception e) {
-            return false;
+        } catch (SecurityException | MalformedJwtException | SignatureException e) {
+            logger.error("Invalid JWT signature, 유효하지 않는 JWT 서명 입니다.");
+        } catch (ExpiredJwtException e) {
+            logger.error("Expired JWT token, 만료된 JWT token 입니다.");
+        } catch (UnsupportedJwtException e) {
+            logger.error("Unsupported JWT token, 지원되지 않는 JWT 토큰 입니다.");
+        } catch (IllegalArgumentException e) {
+            logger.error("JWT claims is empty, 잘못된 JWT 토큰 입니다.");
         }
+        return false;
     }
-
 
     // HttpServletRequest 에서 Cookie Value : JWT 가져오기
     public String getTokenFromRequest(HttpServletRequest req) {

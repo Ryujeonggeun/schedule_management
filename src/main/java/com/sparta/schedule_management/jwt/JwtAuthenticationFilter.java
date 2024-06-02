@@ -21,6 +21,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     private final JwtUtil jwtUtil;
 
     public JwtAuthenticationFilter(JwtUtil jwtUtil) {
+
         this.jwtUtil = jwtUtil;
         setFilterProcessesUrl("/api/user/login");
     }
@@ -43,6 +44,11 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
             throw new RuntimeException(e.getMessage());
         }
     }
+    // Access Token 만료시간 설정 (10초)
+    private final long ACCESS_TOKEN_EXPIRATION =  10 * 1000L; // 10초
+    // Refresh Token 만료기간 설정(30초)
+    private final long REFRESH_TOKEN_EXPIRATION = 30 * 1000L; //30초
+
 
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) throws IOException, ServletException {
@@ -50,8 +56,13 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         String username = ((UserDetailsImpl) authResult.getPrincipal()).getUsername();
         UserRoleEnum role = ((UserDetailsImpl) authResult.getPrincipal()).getUser().getRole();
 
-        String token = jwtUtil.generateToken(username, role);
-        jwtUtil.addJwtToCookie(response, token);
+        String accessToken = jwtUtil.generateToken(username, role , ACCESS_TOKEN_EXPIRATION);
+        String refreshToken = jwtUtil.generateToken(username, role , REFRESH_TOKEN_EXPIRATION);
+
+        jwtUtil.addJwtToCookie(response, accessToken);
+        jwtUtil.addJwtToCookie(response, refreshToken);
+
+
     }
 
     @Override
