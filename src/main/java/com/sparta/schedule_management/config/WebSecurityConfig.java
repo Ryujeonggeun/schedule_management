@@ -4,6 +4,8 @@ import com.sparta.schedule_management.jwt.JwtAuthenticationFilter;
 import com.sparta.schedule_management.jwt.JwtAuthorizationFilter;
 import com.sparta.schedule_management.jwt.JwtUtil;
 import com.sparta.schedule_management.security.UserDetailsServiceImpl;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -24,6 +26,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableGlobalMethodSecurity(securedEnabled = true)
 public class WebSecurityConfig {
 
+    private static final Logger log = LoggerFactory.getLogger(WebSecurityConfig.class);
     private final JwtUtil jwtUtil;
     private final UserDetailsServiceImpl userDetailsService;
     private final AuthenticationConfiguration authenticationConfiguration;
@@ -60,13 +63,12 @@ public class WebSecurityConfig {
         http.sessionManagement((sessionManagement) ->
                 sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
         );
-
-        http.authorizeRequests((authorizeRequests) ->
-                authorizeRequests
+        http.authorizeHttpRequests((authorizeHttpRequests) ->
+                authorizeHttpRequests
                         .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll() // resources 접근 허용 설정
-                        .("/api/user/login").permitAll() // 로그인 페이지 접근 허용
-                        .antMatchers("/api/user/**").authenticated() // '/api/user/'로 시작하는 요청은 인증이 필요함
+                        .requestMatchers("/api/user/**").permitAll() // '/api/user/'로 시작하는 요청 모두 접근 허가
                         .anyRequest().authenticated() // 그 외 모든 요청 인증처리
+
         );
 
 //        http.formLogin((formLogin) ->
@@ -75,8 +77,10 @@ public class WebSecurityConfig {
 //        );
 
         // 필터 관리
+
+
         http.addFilterBefore(jwtAuthorizationFilter(), JwtAuthenticationFilter.class);
-        http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
+        http.addFilterBefore(jwtAuthenticationFilter(), JwtAuthorizationFilter.class);
 
 
         return http.build();

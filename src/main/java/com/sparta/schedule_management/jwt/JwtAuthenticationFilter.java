@@ -9,6 +9,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.annotation.Order;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -44,10 +45,10 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
             throw new RuntimeException(e.getMessage());
         }
     }
-    // Access Token 만료시간 설정 (10초)
-    private final long ACCESS_TOKEN_EXPIRATION =  10 * 1000L; // 10초
-    // Refresh Token 만료기간 설정(30초)
-    private final long REFRESH_TOKEN_EXPIRATION = 30 * 1000L; //30초
+    // Access Token 만료시간 설정 (30초)
+    private final long ACCESS_TOKEN_EXPIRATION =  30 * 1000L; // 10초
+    // Refresh Token 만료기간 설정(1분)
+    private final long REFRESH_TOKEN_EXPIRATION = 60 * 1000L; //30초
 
 
     @Override
@@ -56,8 +57,8 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         String username = ((UserDetailsImpl) authResult.getPrincipal()).getUsername();
         UserRoleEnum role = ((UserDetailsImpl) authResult.getPrincipal()).getUser().getRole();
 
-        String accessToken = jwtUtil.generateToken(username, role , ACCESS_TOKEN_EXPIRATION);
-        String refreshToken = jwtUtil.generateToken(username, role , REFRESH_TOKEN_EXPIRATION);
+        String accessToken = jwtUtil.generateToken(username, role , ACCESS_TOKEN_EXPIRATION , "access");
+        String refreshToken = jwtUtil.generateToken(username, role , REFRESH_TOKEN_EXPIRATION, "refresh");
 
         jwtUtil.addJwtToCookie(response, accessToken);
         jwtUtil.addJwtToCookie(response, refreshToken);
