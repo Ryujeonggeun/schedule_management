@@ -33,6 +33,11 @@ public class JwtUtil {
     public static final String ACCESS_TOKEN_HEADER = "ACCESS_TOKEN_HEADER";
     public static final String REFRESH_TOKEN_HEADER = "REFRESH_TOKEN_HEADER";
 
+    // Access Token 만료시간 설정 (30초)
+    public final long ACCESS_TOKEN_EXPIRATION = 30 *  60 * 1000L; // 30분
+    // Refresh Token 만료기간 설정(1분)
+    public final long REFRESH_TOKEN_EXPIRATION = 60 * 60 * 1000L; //1시간
+
     // 로그 설정
     public static final Logger logger = LoggerFactory.getLogger("JWT 관련 로그");
 
@@ -55,7 +60,7 @@ public class JwtUtil {
         return BEARER_PREFIX + Jwts.builder()
                 .setSubject(username)
                 .claim(AUTHORIZATION_HEADER, role)//사용자 권한
-                .claim("token_type", tokenType)// 토큰 타입 추가
+                .claim("tokenType", tokenType)// 토큰 타입 추가
                 .setIssuedAt(now)
                 .setExpiration(expiryDate)
                 .signWith(SignatureAlgorithm.HS256, secret)
@@ -65,11 +70,11 @@ public class JwtUtil {
 
     //사용자에서 AccessToken 가져오기
     public String getAccessTokenFromRequest(HttpServletRequest req) {
-        return getTokenFromRequest(req, "ACCESS_TOKEN_HEADER");
+        return getTokenFromRequest(req, ACCESS_TOKEN_HEADER);
     }
     //사용자에서 RefreshToken 가져오기
     public String getRefreshTokenFromRequest(HttpServletRequest req) {
-        return getTokenFromRequest(req, "REFRESH_TOKEN_HEADER");
+        return getTokenFromRequest(req, REFRESH_TOKEN_HEADER);
     }
 
     // HttpServletRequest 에서 Cookie Value : JWT 가져오기
@@ -77,7 +82,7 @@ public class JwtUtil {
         Cookie[] cookies = req.getCookies();
         if (cookies != null) {
             for (Cookie cookie : cookies) {
-                if (cookie.getName().equals(AUTHORIZATION_HEADER)) {
+                if (cookie.getName().equals(headerName)) {
                     try {
                         return URLDecoder.decode(cookie.getValue(), "UTF-8"); // Encode 되어 넘어간 Value 다시 Decode
                     } catch (UnsupportedEncodingException e) {
@@ -104,12 +109,12 @@ public class JwtUtil {
 
 
 
-    public void addJwtToCookie(HttpServletResponse res, String token) {
+    public void addJwtToCookie(HttpServletResponse res, String token,String headerName) {
 
         try {
             token = URLEncoder.encode(token, "utf-8").replaceAll("\\+", "%20"); // Cookie Value 에는 공백이 불가능해서 encoding 진행
 
-            Cookie cookie = new Cookie(AUTHORIZATION_HEADER, token); // Name-Value
+            Cookie cookie = new Cookie(headerName, token); // Name-Value
             cookie.setPath("/");
 
             // Response 객체에 Cookie 추가

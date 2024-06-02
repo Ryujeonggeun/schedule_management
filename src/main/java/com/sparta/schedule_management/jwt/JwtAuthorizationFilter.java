@@ -35,6 +35,8 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
         log.info("doFilterInternal 실행");
         String tokenValue = jwtUtil.getAccessTokenFromRequest(req);
         String refreshToken = jwtUtil.getRefreshTokenFromRequest(req);
+        log.info(tokenValue);
+        log.info(refreshToken);
 
         //hasText : Null체크
         if (StringUtils.hasText(tokenValue)) {

@@ -45,10 +45,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
             throw new RuntimeException(e.getMessage());
         }
     }
-    // Access Token 만료시간 설정 (30초)
-    private final long ACCESS_TOKEN_EXPIRATION =  30 * 1000L; // 10초
-    // Refresh Token 만료기간 설정(1분)
-    private final long REFRESH_TOKEN_EXPIRATION = 60 * 1000L; //30초
+
 
 
     @Override
@@ -57,11 +54,11 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         String username = ((UserDetailsImpl) authResult.getPrincipal()).getUsername();
         UserRoleEnum role = ((UserDetailsImpl) authResult.getPrincipal()).getUser().getRole();
 
-        String accessToken = jwtUtil.generateToken(username, role , ACCESS_TOKEN_EXPIRATION , "access");
-        String refreshToken = jwtUtil.generateToken(username, role , REFRESH_TOKEN_EXPIRATION, "refresh");
+        String accessToken = jwtUtil.generateToken(username, role , jwtUtil.ACCESS_TOKEN_EXPIRATION , "access");
+        String refreshToken = jwtUtil.generateToken(username, role , jwtUtil.REFRESH_TOKEN_EXPIRATION,"refresh");
 
-        jwtUtil.addJwtToCookie(response, accessToken);
-        jwtUtil.addJwtToCookie(response, refreshToken);
+        jwtUtil.addJwtToCookie(response, accessToken,jwtUtil.ACCESS_TOKEN_HEADER);
+        jwtUtil.addJwtToCookie(response, refreshToken,jwtUtil.REFRESH_TOKEN_HEADER);
 
 
     }
