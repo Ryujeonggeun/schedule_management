@@ -39,7 +39,10 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
         //AccessToken, refreshToken 가져오기
         String accessToken = jwtUtil.getAccessTokenFromRequest(req);
         String refreshToken = jwtUtil.getRefreshTokenFromRequest(req);
+        //유효성 검사
         boolean accessTokenValid = false;
+        //만료검사
+        boolean accessTokenExpiration = false;
 
         // hasText : Null체크
         if (StringUtils.hasText(accessToken)) {
@@ -47,16 +50,28 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
             accessToken = jwtUtil.substringToken(accessToken);
             log.info("AccessToken= " + accessToken);
 
-            // Access 토큰 검증
+            // Access 토큰 유효성 검사
             try {
                 accessTokenValid = jwtUtil.validateToken(accessToken);
             }
              catch (Exception e) {
                 log.error("Access Token Error");
+                return;
+            }
+            //Access 토큰 만료검사
+            try {
+                accessTokenExpiration = jwtUtil.expireToken(accessToken);
+            }catch (Exception e) {
+                log.error("AccessTokenExpiration Error");
+                return;
             }
         }
 
-        if (!accessTokenValid) {
+
+
+
+
+        if (accessTokenValid == true && accessTokenExpiration == false) {
             // Access 토큰이 만료되었고, Refresh 토큰이 존재하며 유효한 경우
             if (StringUtils.hasText(refreshToken)) {
                 refreshToken = jwtUtil.substringToken(refreshToken);
