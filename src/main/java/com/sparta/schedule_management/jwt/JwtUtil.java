@@ -34,7 +34,7 @@ public class JwtUtil {
     public static final String REFRESH_TOKEN_HEADER = "REFRESH_TOKEN_HEADER";
 
     // Access Token 만료시간 설정 (30초)
-    public final long ACCESS_TOKEN_EXPIRATION = 30 *  60 * 1000L; // 30분
+    public final long ACCESS_TOKEN_EXPIRATION = 10 * 1000L; // 30분
     // Refresh Token 만료기간 설정(1분)
     public final long REFRESH_TOKEN_EXPIRATION = 60 * 60 * 1000L; //1시간
 
@@ -150,6 +150,7 @@ public class JwtUtil {
             logger.error("Invalid JWT signature, 유효하지 않는 JWT 서명 입니다.");
         } catch (ExpiredJwtException e) {
             logger.error("Expired JWT token, 만료된 JWT token 입니다.");
+            return false;
         } catch (UnsupportedJwtException e) {
             logger.error("Unsupported JWT token, 지원되지 않는 JWT 토큰 입니다.");
         } catch (IllegalArgumentException e) {
