@@ -153,20 +153,12 @@ public class JwtUtil {
         } catch (IllegalArgumentException e) {
             logger.error("JWT claims is empty, 잘못된 JWT 토큰 입니다.");
          }catch (ExpiredJwtException e) {
+            logger.info("만료된 토큰 입니다!!");
             return true;
         }
         return false;
     }
 
-    public boolean expireToken(String token) {
-        try {
-            Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
-            return true;
-        } catch (ExpiredJwtException e) {
-        logger.error("JWT 토큰이 만료되었습니다.");
-        }
-        return false;
-    }
 
 
 
